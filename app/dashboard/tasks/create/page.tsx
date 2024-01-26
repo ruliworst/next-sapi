@@ -5,7 +5,7 @@ import { Suspense } from "react";
 export default async function Page() {
   return (
     <>
-      <h2>Create task</h2>
+      <h2 className="text-2xl mb-3.5">Create task</h2>
       <Suspense fallback={<CardSkeleton />}>
         <CreateTaskForm />
       </Suspense>

@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { createTask, fetchUsers } from "@/app/lib/data"
 import { useEffect, useState } from "react"
 import { User } from "@/app/lib/definitions";
+import { toast } from 'react-hot-toast';
 
 export default function CreateTaskForm() {
   const [users, setUsers] = useState<null | User[]>(null)
@@ -45,14 +46,17 @@ export default function CreateTaskForm() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createTask(values);
+    const queryResult = createTask(values);
+
+    queryResult
+      .then(value => toast.success('The task was created.'))
+      .catch(e => console.error("The task could not be created."));
   }
 
   return (
     <>
-      <p>Create a Task</p>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-96">
           <FormField
             control={form.control}
             name="title"

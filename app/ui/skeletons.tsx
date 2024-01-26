@@ -16,3 +16,18 @@ export function CardSkeleton() {
     </div>
   );
 }
+
+export function TasksTableSkeleton() {
+  return (
+    <tr className="w-full border-b border-gray-100 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+      {/* Title */}
+      <td className="whitespace-nowrap px-3 py-3">
+        <div className="h-6 w-32 rounded bg-gray-100"></div>
+      </td>
+      {/* Author */}
+      <td className="whitespace-nowrap px-3 py-3">
+        <div className="h-6 w-16 rounded bg-gray-100"></div>
+      </td>
+    </tr>
+  );
+}
