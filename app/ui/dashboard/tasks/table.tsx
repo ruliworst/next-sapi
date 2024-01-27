@@ -1,4 +1,7 @@
 import { fetchTasks } from '@/app/lib/data';
+import { EyeIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import DeleteAlert from '../../alerts/delete-alert';
 
 export default async function TasksTable() {
   const tasks = await fetchTasks();
@@ -20,11 +23,13 @@ export default async function TasksTable() {
           <table className="hidden min-w-full text-gray-900 md:table max-w-xl">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                <th scope="col" className="px-4 py-2 font-semibold text-lg sm:pl-6">
                   Title
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="px-3 py-2 font-semibold text-lg">
                   Author
+                </th>
+                <th scope="col" className="px-3 py-5">
                 </th>
               </tr>
             </thead>
@@ -39,6 +44,12 @@ export default async function TasksTable() {
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {task.author}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3 flex gap-4">
+                    <Link href={`/dashboard/tasks/${task.id}`}>
+                      <EyeIcon className="w-6 hover:text-blue-600 hover:scale-110" />
+                    </Link>
+                    <DeleteAlert id={task.id} />
                   </td>
                 </tr>
               ))}

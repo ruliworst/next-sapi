@@ -69,3 +69,16 @@ export async function fetchTaskById(id: string): Promise<Task> {
     throw new Error('Failed to fetch task.');
   }
 }
+
+export async function deleteTaskById(id: string): Promise<boolean> {
+  try {
+    const data = await sql`
+      DELETE FROM tasks WHERE id = ${id}
+    `
+
+    return data.rowCount > 0;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete task.');
+  }
+}

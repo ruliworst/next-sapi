@@ -13,7 +13,7 @@ export default function Page() {
 
   return (
     <>
-      <h2>Tasks</h2>
+      <h2 className="text-xl font-bold">Tasks</h2>
       <Suspense fallback={<TasksTableSkeleton />}>
         <TasksTable />
       </Suspense>

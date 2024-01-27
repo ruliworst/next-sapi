@@ -50,7 +50,7 @@ export default function CreateTaskForm() {
 
     queryResult
       .then(value => toast.success('The task was created.'))
-      .catch(e => console.error("The task could not be created."));
+      .catch(e => toast.error("The task could not be created."));
   }
 
   return (
