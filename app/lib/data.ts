@@ -45,11 +45,27 @@ export async function fetchTasks(): Promise<Array<Task>> {
       SELECT t.id, t.Title, u.name as author
       FROM tasks as t, users as u 
       WHERE t.author = u.id
+      LIMIT 12;
     `;
 
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch tasks.');
+  }
+}
+
+export async function fetchTaskById(id: string): Promise<Task> {
+  try {
+    const data = await sql<Task>`
+      SELECT t.id, t.title, u.name as author
+      FROM tasks as t, users as u
+      WHERE t.id = ${id} AND t.author = u.id;
+    `;
+
+    return data.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch task.');
   }
 }
