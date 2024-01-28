@@ -46,7 +46,11 @@ export default function CreateTaskForm() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const queryResult = createTask(values);
+    const taskParameters = {
+      created: new Date(),
+      ...values,
+    };
+    const queryResult = createTask(taskParameters);
 
     queryResult
       .then(value => toast.success('The task was created.'))
