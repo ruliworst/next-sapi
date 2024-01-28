@@ -1,6 +1,6 @@
 'use client';
 
-import { createTaskRecord, fetchTaskRecordsByTaskId } from "@/app/lib/data";
+import { createTaskRecord, fetchTaskRecordsByTaskId, stopTaskRecord } from "@/app/lib/data";
 import { TaskRecordDTO } from "@/app/lib/definitions";
 import { Button } from "@/components/ui/button";
 import { PlayIcon, StopIcon } from "@radix-ui/react-icons";
@@ -20,7 +20,7 @@ export default function TaskRecordsTable({ taskId }: { taskId: string }) {
     }
 
     loadRecords();
-  }, [])
+  }, []);
 
   const handleOnClickStart = () => {
     const newRecord = {
@@ -44,7 +44,22 @@ export default function TaskRecordsTable({ taskId }: { taskId: string }) {
   }
 
   const handleOnClickStop = () => {
-
+    stopTaskRecord(recordingTaskRecord!)
+      .then(value => {
+        if (value) {
+          stopTaskRecord(recordingTaskRecord!)
+            .then(updatedTaskRecord => {
+              const recordsCopy = Array.from(records);
+              recordsCopy.find(r => r.id === updatedTaskRecord.id)!.end = updatedTaskRecord.end;
+              setRecords(recordsCopy);
+              setRecording(false);
+              setRecordingTaskRecord(undefined);
+            });
+          toast.success("The record has been stopped successfully.");
+        } else {
+          toast.error("The record could not be stopped.");
+        }
+      });
   }
 
   return (

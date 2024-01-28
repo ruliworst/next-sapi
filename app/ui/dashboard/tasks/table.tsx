@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { Badge } from '@/components/ui/badge';
 
-export default async function TasksTable() {
+export default function TasksTable() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default async function TasksTable() {
     loadTasks();
   }, []);
 
-  const handleDelete = async (taskId: string) => {
+  const handleDelete = (taskId: string) => {
     deleteTaskById(taskId)
       .then(value => {
         if (value) {

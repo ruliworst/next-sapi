@@ -14,8 +14,6 @@ export async function createTask({ title, author, created }: { title: string, au
       VALUES (${title}, ${author}, ${formattedDate}, ${status})
       ON CONFLICT (id) DO NOTHING;
     `
-    console.log('Created task.');
-
     return insertedTask.rowCount > 0;
   } catch (error) {
     console.error('Database Error:', error);
@@ -35,11 +33,8 @@ export async function createTaskRecord(
       ON CONFLICT (id) DO NOTHING
       RETURNING *;
     `
-    console.log('Starting to record.');
-
     const taskRecord = insertTask.rows[0];
     const taskRecordDTO = await fetchTaskRecordById(taskRecord.id);
-    console.log(taskRecordDTO)
 
     return taskRecordDTO;
   } catch (error) {
@@ -50,13 +45,12 @@ export async function createTaskRecord(
 
 export async function fetchTaskRecordById(taskRecordId: string): Promise<TaskRecordDTO> {
   try {
-    const fetchTask = await sql<{ row: string }>`
-    SELECT tr.id, u.name, tr.start, tr."end", tr.observations
-    FROM task_records as tr
-    LEFT OUTER JOIN users as u ON tr.userid = u.id
-    WHERE ${taskRecordId} = tr.id;
-  `;
-
+    const fetchTask = await sql<TaskRecordDTO>`
+      SELECT tr.id, u.name, tr.start, tr."end", tr.observations
+      FROM task_records as tr
+      LEFT OUTER JOIN users as u ON tr.userid = u.id
+      WHERE ${taskRecordId} = tr.id;
+    `;
     return fetchTask.rows[0];
   } catch (error) {
     console.error('Database Error:', error);
@@ -140,11 +134,29 @@ export async function fetchTaskRecordsByTaskId(id: string): Promise<TaskRecordDT
       SELECT tr.id, tr.start, tr."end", tr.observations, u.name
       FROM task_records as tr
       LEFT OUTER JOIN users as u ON tr.userid = u.id
-      WHERE tr.task = ${id};
+      WHERE tr.task = ${id}
+      LIMIT 10;
     `;
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to retrieve task records.');
+  }
+}
+
+// TODO: Improve these methods.
+export async function stopTaskRecord(taskRecord: TaskRecordDTO): Promise<TaskRecord> {
+  const endDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  try {
+    const data = await sql<TaskRecord>`
+      UPDATE task_records
+      SET "end" = ${endDate}
+      WHERE id = ${taskRecord.id}
+      RETURNING *;
+    `
+    return data.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update task record.');
   }
 }
